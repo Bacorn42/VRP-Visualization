@@ -1,5 +1,7 @@
 var map;
-const url = "http://localhost:8989"
+const url = "http://localhost:8989";
+
+// Gets bounds of map and initializes it
 document.addEventListener("DOMContentLoaded", function(e) {
 	var bounds;
 	fetch(url + "/info")
@@ -12,6 +14,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
 	})
 });
 
+// Creates a map in the div and draws the bounding rectangle
 function initMap(bounds) {
   var layer = L.tileLayer('https://maps.omniscale.net/v2/mapsgraph-bf48cc0b/style.default' + (L.Browser.retina ? '/hq.true' : '') + '/{z}/{x}/{y}.png', {
     layers: 'osm',
@@ -46,6 +49,8 @@ function initMap(bounds) {
   }).addTo(map);
 }
 
+// Generates a number of random points between coordinates [52.16, 20.9] and [52.3, 21.1]
+// with the first (starting) point being roughly in the center of Warsaw
 document.getElementById('randBut').addEventListener('click', function() {
   var points = parseInt(document.getElementById('points').value);
   var textarea = document.getElementById('text');
@@ -57,6 +62,11 @@ document.getElementById('randBut').addEventListener('click', function() {
   }
 });
 
+// TODO: Convert this code from client-side to server-side
+//
+// First makes n(n - 1) AJAX calls to find distances between all points.
+// Once all dinstances are aquired, call the VRP algorithm on the distance matrix.
+// Finally, from the solution aquire the routes and draw them.
 document.getElementById('searchButtonX').addEventListener('click', function() {
   console.log("Getting data.");
   var inputs = document.getElementById('text').value.trim().split('\n');
@@ -99,6 +109,9 @@ document.getElementById('searchButtonX').addEventListener('click', function() {
   });
 });
 
+// TODO: Convert this code from client-side to server-side
+//
+// Converts the vehicle paths from graph form to actual map routes.
 function getRoutes(paths, coords) {
   return new Promise( function(resolve, reject) {
 	  routes = Array(paths.length);
@@ -121,8 +134,15 @@ function getRoutes(paths, coords) {
   });
 }
 
+// TODO: Add more colors.
+//
+// Draws the routes with a different color for each vehicle.
+// Index description:
+// i - route for vehicle (made of many points)
+// j - route between 2 path points (made of many lines)
+// k - coordinate of line point
 function drawRoutes(routes) {
-  var colors = ['#882288', '#887711', '#117711', '#113377', '#666666', '#119999'];
+  const colors = ['#882288', '#887711', '#117711', '#113377', '#666666', '#119999'];
   for(let i = 0; i < routes.length; i++) {
     for(let j = 0; j < routes[i].length; j++) {
 	  let points = [];
