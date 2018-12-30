@@ -3,15 +3,14 @@ const url = "http://localhost:8989";
 
 // Gets bounds of map and initializes it
 document.addEventListener("DOMContentLoaded", function(e) {
-	var bounds;
 	fetch(url + "/info")
 	.then(function(response) {
 	  return response.json();
 	})
 	.then(function(responseJSON) {
-	  bounds = responseJSON.bbox;
+	  var bounds = responseJSON.bbox;
 	  initMap(bounds);
-	})
+	});
 });
 
 // Creates a map in the div and draws the bounding rectangle
@@ -50,7 +49,7 @@ function initMap(bounds) {
 }
 
 // Generates a number of random points between coordinates [52.16, 20.9] and [52.3, 21.1]
-// with the first (starting) point being roughly in the center of Warsaw
+// with the first (starting) point being roughly in the center of Warsaw at [52.23, 21]
 document.getElementById('randBut').addEventListener('click', function() {
   var points = parseInt(document.getElementById('points').value);
   var textarea = document.getElementById('text');
@@ -62,76 +61,28 @@ document.getElementById('randBut').addEventListener('click', function() {
   }
 });
 
-// TODO: Convert this code from client-side to server-side
-//
-// First makes n(n - 1) AJAX calls to find distances between all points.
-// Once all dinstances are aquired, call the VRP algorithm on the distance matrix.
-// Finally, from the solution aquire the routes and draw them.
+// Calls the custom VRP API with all the points and numbr of cars.
+// The calculations are all done on the server.
 document.getElementById('searchButtonX').addEventListener('click', function() {
-  console.log("Getting data.");
   var inputs = document.getElementById('text').value.trim().split('\n');
-  var matrix;
-  var coords = [];
-  for(let i = 0; i < inputs.length - 1; i++) {
-    coords.push(inputs[i]);
-  }
-  var promises = [];
-  matrix = Array(inputs.length - 1);
-  for(let i = 0; i < matrix.length; i++)
-    matrix[i] = Array(inputs.length - 1);
-  for(let i = 0; i < matrix.length; i++)
-    matrix[i][i] = 0;
-  console.log("Finding distance matrix.");
-  for(let i = 0; i < matrix.length; i++)
-    for(let j = 0; j < matrix.length; j++) {
-	  if(i != j) {
-	    promises.push(fetch("http://localhost:8989/route/?point=" + coords[i] + "&point=" + coords[j])
-		.then(function (response) {
-		  return response.json();
-		})
-		.then(function (responseJSON) {
-		  matrix[i][j] = responseJSON.paths[0].distance;
-		}));
-	  }
-	}
-  Promise.all(promises)
-  .then(function (values) {
-    console.log("FInding VRP solution.");
-	var cars = parseInt(document.getElementById('cars').value);
-    var paths = vrp(matrix, cars);
-	console.log("Getting routes.");
-	getRoutes(paths, coords)
-	.then(function (r) {
-	  console.log("Drawing routes.");
-	  drawRoutes(r);
-	  console.log("Finished successfully.");
-	});
-  });
+  var cars = parseInt(document.getElementById('cars').value);
+  
+  var requestUrl = url + "/vrp/?";
+  for(let i = 0; i < inputs.length; i++)
+    requestUrl += "point=" + inputs[i] + "&";
+  requestUrl += "cars=" + cars;
+  
+  fetch(requestUrl)
+  .then(response => response.json())
+  .then(pathsObj => getRoutes(pathsObj, cars));
 });
 
-// TODO: Convert this code from client-side to server-side
-//
-// Converts the vehicle paths from graph form to actual map routes.
-function getRoutes(paths, coords) {
-  return new Promise( function(resolve, reject) {
-	  routes = Array(paths.length);
-	  var promises = [];
-	  for(let i = 0; i < paths.length; i++)
-		routes[i] = Array(paths[i].length - 1);
-	  for(let i = 0; i < paths.length; i++)
-		for(let j = 0; j < paths[i].length - 1; j++)
-		  promises.push(fetch("http://localhost:8989/route/?point=" + coords[paths[i][j]] + "&point=" + coords[paths[i][j+1]] + "&points_encoded=false")
-		  .then(function (response) {
-			return response.json();
-		  })
-		  .then(function (responseJSON) {
-			routes[i][j] = responseJSON.paths[0].points.coordinates;
-		  }));
-	  Promise.all(promises)
-	  .then(function (values) {
-		 resolve(routes);
-	  });
-  });
+// Extracts arrays of coordinates from the JSON object and draws the routes.
+function getRoutes(pathsObj, cars) {
+  var routes = [];
+  for(let i = 0; i < cars; i++)
+    routes.push(pathsObj.paths[i].points.coordinates);
+  drawRoutes(routes);
 }
 
 // TODO: Add more colors.
@@ -139,24 +90,21 @@ function getRoutes(paths, coords) {
 // Draws the routes with a different color for each vehicle.
 // Index description:
 // i - route for vehicle (made of many points)
-// j - route between 2 path points (made of many lines)
-// k - coordinate of line point
+// j - coordinate of line point
 function drawRoutes(routes) {
   const colors = ['#882288', '#887711', '#117711', '#113377', '#666666', '#119999'];
   for(let i = 0; i < routes.length; i++) {
-    for(let j = 0; j < routes[i].length; j++) {
-	  let points = [];
-	  for(let k = 0; k < routes[i][j].length; k++)
-	    points.push(new L.LatLng(routes[i][j][k][1], routes[i][j][k][0]));
+	let points = [];
+	for(let j = 0; j < routes[i].length; j++)
+	  points.push(new L.LatLng(routes[i][j][1], routes[i][j][0]));
 		
-	  var polyline = new L.Polyline(points, {
-	    color: colors[i],
-		weight: 5,
-		opacity: 1,
-		smoothFactor: 1,
-		fill: false
-	  });
-	  polyline.addTo(map);
-	}
+	var polyline = new L.Polyline(points, {
+	  color: colors[i],
+	  weight: 5,
+	  opacity: 1,
+	  smoothFactor: 1,
+	  fill: false
+	});
+	polyline.addTo(map);
   }
 }

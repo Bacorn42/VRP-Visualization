@@ -1,23 +1,22 @@
 <html>
-  <head>
-    <title>VRP Visualization</title>
-    <link rel="stylesheet" href="css/leaflet.css?v=1.3.1" />
-	<style>
-	  #map {
-	    height: 800px;
-	    width: 100%;
-	  }
-	</style>
-  </head>
-  <body>
-    VRP Visualization: <br>
-	Points: <input type="text" id="points"><input type="button" id="randBut" value="Randomize!">
-	<textarea id="text"></textarea><br>
-	Vahicles: <input type="text" id="cars"><br>
-	<input type="button" id="searchButtonX" value="Route!">
-	<div id="map"></div>
-	<script src="js/vrp.js"></script>
-	<script src="js/leaflet.js"></script>
-	<script src="js/main.js"></script>
-  </body>
+    <head>
+        <title>VRP Visualization</title>
+        <link rel="stylesheet" href="css/leaflet.css?v=1.3.1" />
+		<style>
+		  #map {
+		    height: 800px;
+			width: 100%;
+		  }
+		</style>
+    </head>
+    <body>
+		VRP Visualization: <br>
+		Points: <input type="text" id="points"><input type="button" id="randBut" value="Randomize!">
+		<textarea id="text"></textarea><br>
+		Cars: <input type="text" id="cars"><br>
+		<input type="button" id="searchButtonX" value="Route!">
+		<div id="map"></div>
+		<script src="js/leaflet.js"></script>
+		<script src="js/main.js"></script>
+	</body>
 </html>
