@@ -67,6 +67,8 @@ document.getElementById('searchButtonX').addEventListener('click', function() {
   var inputs = document.getElementById('text').value.trim().split('\n');
   var cars = parseInt(document.getElementById('cars').value);
   
+  drawMarkers(inputs);
+  
   var requestUrl = url + "/vrp/?";
   for(let i = 0; i < inputs.length; i++)
     requestUrl += "point=" + inputs[i] + "&";
@@ -76,6 +78,14 @@ document.getElementById('searchButtonX').addEventListener('click', function() {
   .then(response => response.json())
   .then(pathsObj => getRoutes(pathsObj, cars));
 });
+
+// Draws a marker on each location a vehicle has to go through
+function drawMarkers(inputs) {
+  for(let coord of inputs) {
+    let coords = coord.split(',');
+	L.marker([parseFloat(coords[0]), parseFloat(coords[1])]).addTo(map);
+  }
+}
 
 // Extracts arrays of coordinates from the JSON object and draws the routes.
 function getRoutes(pathsObj, cars) {

@@ -123,32 +123,30 @@ public class VRPResource {
 		}
 		
 		while(visited.size() < length) {
-			int from = 0;
 			int to = 0;
 			double minVal = Integer.MAX_VALUE;
 			int car = 0;
 			ArrayList<Integer> candidates = new ArrayList<Integer>();
 		
-		// Candidates are points that a vehicle is currently on (from)
-		for(int i = 0; i < cars; i++)
-			candidates.add(paths[i].get(paths[i].getSize() - 1));
+			// Candidates are points that a vehicle is currently on (from)
+			for(int i = 0; i < cars; i++)
+				candidates.add(paths[i].get(paths[i].getSize() - 1));
 		  
-		// Finding the lowest cost between a candidate and an unvisited point
-		for(int i = 0; i < candidates.size(); i++) {
-		  for(int j = 0; j < length; j++) {
-			if(visited.indexOf(j) == -1) {
-			  if(matrix[candidates.get(i)][j] < minVal) {
-				minVal = matrix[candidates.get(i)][j];
-				from = candidates.get(i);
-				to = j;
-				car = i;
-			  }
+			// Finding the lowest cost between a candidate and an unvisited point
+			for(int i = 0; i < candidates.size(); i++) {
+				for(int j = 0; j < length; j++) {
+					if(visited.indexOf(j) == -1) {
+						if(matrix[candidates.get(i)][j] < minVal) {
+							minVal = matrix[candidates.get(i)][j];
+							to = j;
+							car = i;
+						}
+					}
+				}
 			}
-		  }
+			paths[car].add(to);
+			visited.add(to);
 		}
-		paths[car].add(to);
-		visited.add(to);
-	  }
 		
 		return paths;
 	}
