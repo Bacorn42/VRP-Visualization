@@ -48,7 +48,7 @@ public class VRPResource {
 		}
 	}
 
-	private static final Logger logger = LoggerFactory.getLogger(RouteResource.class);
+	private static final Logger logger = LoggerFactory.getLogger(VRPResource.class);
 	private final GraphHopperAPI graphHopper;
 
 	// Inject makes sure the constructor is properly called
