@@ -72,8 +72,8 @@ document.getElementById('searchButtonX').addEventListener('click', function() {
   
   var requestUrl = url + "/vrp/?";
   for(let i = 0; i < inputs.length; i++)
-    requestUrl += "point=" + inputs[i] + "&";
-  requestUrl += "cars=" + cars;
+    requestUrl += "p=" + inputs[i] + "&";
+  requestUrl += "c=" + cars;
   
   fetch(requestUrl)
   .then(response => response.json())
@@ -85,6 +85,7 @@ function drawMarkers(inputs) {
   for(let coord of inputs) {
     let coords = coord.split(',');
     let marker = L.marker([parseFloat(coords[0]), parseFloat(coords[1])]);
+	marker.setOpacity(0.5);
 	markersLayer.addLayer(marker);
   }
 }

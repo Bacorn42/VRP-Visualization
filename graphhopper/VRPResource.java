@@ -63,8 +63,8 @@ public class VRPResource {
 	// Finally, it packs them into a JSON object that is returned as a Response.
 	@GET
 	public Response getVRP(
-		@QueryParam("point") List<GHPoint> requestPoints,
-		@QueryParam("cars") int cars
+		@QueryParam("p") List<GHPoint> requestPoints,
+		@QueryParam("c") int cars
 	) {
 		int points = requestPoints.size();
 		double[][] matrix = new double[points][points];
