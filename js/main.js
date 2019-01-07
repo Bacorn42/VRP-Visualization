@@ -52,8 +52,8 @@ document.getElementById('randBut').addEventListener('click', function() {
   var textarea = document.getElementById('text');
   textarea.value = "52.23,21\n";
   for(let i = 0; i < points - 1; i++) {
-    let lat = Math.round((Math.random() * 0.14 + 52.16) * 10000) / 10000;
-    let lon = Math.round((Math.random() * 0.2 + 20.9) * 10000) / 10000;
+    let lat = Math.round((Math.random() * 0.4 + 52.03) * 10000) / 10000;
+    let lon = Math.round((Math.random() * 0.5 + 20.75) * 10000) / 10000;
     textarea.value += lat + "," + lon + "\n";
   }
 });
@@ -104,7 +104,7 @@ function getRoutes(pathsObj, cars) {
 // i - route for vehicle (made of many points)
 // j - coordinate of line point
 function drawRoutes(routes) {
-  const colors = ['#882288', '#887711', '#117711', '#113377', '#666666', '#119999'];
+  const colors = ['#882288', '#887711', '#229922', '#113377', '#999999', '#119999', '#555555', '#000000', '#005500', '#654321'];
   for(let i = 0; i < routes.length; i++) {
 	let points = [];
 	for(let j = 0; j < routes[i].length; j++)
