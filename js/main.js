@@ -1,16 +1,13 @@
 var map;
+var markersLayer = new L.LayerGroup();
+var routesLayer = new L.LayerGroup();
 const url = "http://localhost:8989";
 
 // Gets bounds of map and initializes it
 document.addEventListener("DOMContentLoaded", function(e) {
-	fetch(url + "/info")
-	.then(function(response) {
-	  return response.json();
-	})
-	.then(function(responseJSON) {
-	  var bounds = responseJSON.bbox;
-	  initMap(bounds);
-	});
+  fetch(url + "/info")
+  .then(response => response.json())
+  .then(responseJSON => initMap(responseJSON.bbox));
 });
 
 // Creates a map in the div and draws the bounding rectangle
@@ -20,7 +17,7 @@ function initMap(bounds) {
     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright" target="_blank">OpenStreetMap</a> contributors, &copy; <a href="https://maps.omniscale.com/">Omniscale</a>'
   });
   map = L.map('map', {
-    layers: [layer]
+    layers: [layer, markersLayer, routesLayer]
   });
 
   map.fitBounds(new L.LatLngBounds(new L.LatLng(bounds[1], bounds[0]), new L.LatLng(bounds[3], bounds[2])));
@@ -56,16 +53,20 @@ document.getElementById('randBut').addEventListener('click', function() {
   textarea.value = "52.23,21\n";
   for(let i = 0; i < points - 1; i++) {
     let lat = Math.round((Math.random() * 0.14 + 52.16) * 10000) / 10000;
-	let lon = Math.round((Math.random() * 0.2 + 20.9) * 10000) / 10000;
-	textarea.value += lat + "," + lon + "\n";
+    let lon = Math.round((Math.random() * 0.2 + 20.9) * 10000) / 10000;
+    textarea.value += lat + "," + lon + "\n";
   }
 });
 
+// Clears the previous markers and routes.
 // Calls the custom VRP API with all the points and numbr of cars.
 // The calculations are all done on the server.
 document.getElementById('searchButtonX').addEventListener('click', function() {
   var inputs = document.getElementById('text').value.trim().split('\n');
   var cars = parseInt(document.getElementById('cars').value);
+  
+  markersLayer.clearLayers();
+  routesLayer.clearLayers();
   
   drawMarkers(inputs);
   
@@ -79,11 +80,12 @@ document.getElementById('searchButtonX').addEventListener('click', function() {
   .then(pathsObj => getRoutes(pathsObj, cars));
 });
 
-// Draws a marker on each location a vehicle has to go through
+// Draws a marker on each location a vehicle has to go through.
 function drawMarkers(inputs) {
   for(let coord of inputs) {
     let coords = coord.split(',');
-	L.marker([parseFloat(coords[0]), parseFloat(coords[1])]).addTo(map);
+    let marker = L.marker([parseFloat(coords[0]), parseFloat(coords[1])]);
+	markersLayer.addLayer(marker);
   }
 }
 
@@ -106,15 +108,15 @@ function drawRoutes(routes) {
   for(let i = 0; i < routes.length; i++) {
 	let points = [];
 	for(let j = 0; j < routes[i].length; j++)
-	  points.push(new L.LatLng(routes[i][j][1], routes[i][j][0]));
+      points.push(new L.LatLng(routes[i][j][1], routes[i][j][0]));
 		
-	var polyline = new L.Polyline(points, {
-	  color: colors[i],
-	  weight: 5,
-	  opacity: 1,
-	  smoothFactor: 1,
-	  fill: false
+    let polyline = new L.Polyline(points, {
+      color: colors[i],
+      weight: 5,
+      opacity: 1,
+      smoothFactor: 1,
+      fill: false
 	});
-	polyline.addTo(map);
+    polyline.addTo(routesLayer);
   }
 }

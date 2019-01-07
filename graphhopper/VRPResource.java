@@ -8,6 +8,8 @@ import com.graphhopper.util.PointList;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -46,6 +48,7 @@ public class VRPResource {
 		}
 	}
 
+	private static final Logger logger = LoggerFactory.getLogger(RouteResource.class);
 	private final GraphHopperAPI graphHopper;
 
 	// Inject makes sure the constructor is properly called
@@ -72,7 +75,10 @@ public class VRPResource {
 		
 		PointList[] routes = new PointList[cars];
 		
+		logger.info("Getting routes...");
+		
 		for(int i = 0; i < cars; i++) {
+			logger.info("Getting route for car " + (i+1) + "/" + cars);
 			routes[i] = new PointList(0, false);
 			for(int j = 0; j < paths[i].getSize() - 1; j++) {
 				GHRequest request = new GHRequest(requestPoints.get(paths[i].get(j)), requestPoints.get(paths[i].get(j+1)));
@@ -80,6 +86,8 @@ public class VRPResource {
 				routes[i].add(response.getBest().getPoints());
 			}
 		}
+		
+		logger.info("Building JSON...");
 		
 		ObjectNode json = JsonNodeFactory.instance.objectNode();
 		ArrayNode jsonPathList = json.putArray("paths");
@@ -89,14 +97,17 @@ public class VRPResource {
 			jsonPath.putPOJO("points", routes[i].toLineString(false));
 		}
 		
+		logger.info("Success!");
 		return Response.ok(json).build();
 	}
 	
 	// Builds the matrix using simple requests.
 	private void buildMatrix(double[][] matrix, List<GHPoint> requestPoints) {
 		int points = requestPoints.size();
+		logger.info("Building matrix...");
 		
 		for(int i = 0; i < points; i++) {
+			logger.info("Calculating point " + (i + 1) + "/" + points);
 			for(int j = 0; j < points; j++) {
 				if(i == j) {
 					matrix[i][j] = 0;
@@ -116,6 +127,7 @@ public class VRPResource {
 		ArrayListWrapper[] paths = new ArrayListWrapper[cars];
 		ArrayList<Integer> visited = new ArrayList<Integer>();
 		visited.add(0);
+		logger.info("Using Greedy Algorithm...");
 		
 		for(int i = 0; i < cars; i++) {
 			paths[i] = new ArrayListWrapper();
