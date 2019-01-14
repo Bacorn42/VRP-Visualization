@@ -48,7 +48,7 @@ also **in the Graphhopper source**.
 There are a few algorithms for the user to choose from to find the most suitable solution,
 ranging from the fast, but rather inefficient greedy algorithm, 
 to more sophisticated algorithms that will take more time to compute, 
-but provide better solutions, for example, __simulated annealing__ to reduce total distance.
+but provide better solutions, for example, _simulated annealing_ to reduce total distance.
 
 ### Client 
 #### Web app
