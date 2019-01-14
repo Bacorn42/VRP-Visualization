@@ -38,7 +38,7 @@ All computation is done on the server side.
 The server has few modifications in order to enable ability to perform calculations
 on matrices and implement algorithms used to calculate solutions.
 The server modifications (algorithms and ways of performing calculations) 
-are contained in the file `graphhopper/VRPResource.java`, which is meant to be in
+are contained in the file `/graphhopper/VRPResource.java`, which is meant to be in
 `web-bundle/src/main/java/com/graphhopper/resources`
 **of the Graphhopper source** and enabled in the file
 `web-bundle/src/main/java/com/graphhopper/http/GraphHopperBundle.java`.
@@ -56,7 +56,9 @@ The web app is built using technologies such as HTML5, CSS, JavaScript and Leafl
 It consists of a simple sidebar with controls used to input data for the calculations
 and a Leaflet map widget which covers the most of the web app area.
 That part is used to help in providing input data and showing the output.
-All web app JavaScript code is containted in the file `js/main.js`.
+
+All web app JavaScript code is containted in the file `/js/main.js` and the main HTML file
+is in `/index.html`. Web app CSS data is in the file `/css/styles.css`,
 
 #### Leaflet
 A local Leaflet instance is used, which enables the app to be used offline,
