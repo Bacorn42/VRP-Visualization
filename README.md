@@ -1,16 +1,68 @@
 # VRP visualizer
-Web application for visualizing the Vehicle Routing Problem solutions.
-**The project is under heavy development.**
-Currently it uses a Greedy Algorithm that takes the distance matrix and the amount of vehicles and gives the paths each vehicle takes. 
-Next, it queries the server to obtain the route points for those paths. 
+Visualizing the Vehicle Routing Problem solutions.
 
-Finally, Leaflet is used to draw the routes in various colors to distinguish the different vehicles.  
-The points are randomly generated over the area of Warsaw between the coordinates [52.16, 20.9] and [52.3, 21.1]. 
-The vehicles starting point is located roughly in the middle of Warsaw.
+## Introduction
+Web application that provides and displays solutions to the Vehicle Routing Problem 
+(finding the shortest path for a fleet of vehicles to go through a set of points). 
+There will be one starting point for the vehicles 
+(the depots for delivery companies for example) and any number (up to, say 1000) 
+of points to cover.  
+It can be thought of as a simulation of a delivery company calculating a route for the day.  
 
-Plans include improved VRP algorithms in order to reduce total distance (for example, simulated annealing). 
+## Usage
+All user interaction is meant to be happening in a sidebar on the left side of the web app
+page or the map on the remaining part.
 
-## Quick Start
-1. Enter the number of locations on the sidebar, click a button to calculate given number of random points.
-2. Click "Route!" button to calculate routes.
-3. Calculated route should appear on the map after calculations which take longer depending on given number of points. 
+To calculate the solution:
+
+1. Select the start point using a map or the search box.
+2. Enter the number of vehicles.
+3. Enter destinations using a map or the search box.
+4. Select an algorithm used to calculate routes.
+5. Click "Route!" button to perform the calculation.
+
+Calculated routes should appear on the map after calculations which take longer depending 
+on number of points. 
+Distances should appear on the sidebar.
+
+## Technical details
+
+### Server 
+#### Graphhopper
+The application runs on a local Graphhopper server which stores a map of the 
+Mazowieckie Voivodeship (it can be easily changed though, see the documentation of 
+the Graphhopper server). 
+That allows for easy calculations using route data provided with Graphhopper.
+All computation is done on the server side.
+
+The server has few modifications in order to enable ability to perform calculations
+on matrices and implement algorithms used to calculate solutions.
+The server modifications (algorithms and ways of performing calculations) 
+are contained in the file `graphhopper/VRPResource.java`, which is meant to be in
+`web-bundle/src/main/java/com/graphhopper/resources`
+**of the Graphhopper source** and enabled in the file
+`web-bundle/src/main/java/com/graphhopper/http/GraphHopperBundle.java`.
+also **in the Graphhopper source**.
+
+#### Algorithms
+There are a few algorithms for the user to choose from to find the most suitable solution,
+ranging from the fast, but rather inefficient greedy algorithm, 
+to more sophisticated algorithms that will take more time to compute, 
+but provide better solutions, for example, __simulated annealing__ to reduce total distance.
+
+### Client 
+#### Web app
+The web app is built using technologies such as HTML5, CSS, JavaScript and Leaflet.
+It consists of a simple sidebar with controls used to input data for the calculations
+and a Leaflet map widget which covers the most of the web app area.
+That part is used to help in providing input data and showing the output.
+All web app JavaScript code is containted in the file `js/main.js`.
+
+#### Leaflet
+A local Leaflet instance is used, which enables the app to be used offline,
+since no component is downloaded.
+This approach allows for easy modifications, resistance to changes that could break
+the functionality, better performance, since nothing needs to be downloaded from 
+the remote servers, but on the other hand, needs constant updating in order to keep up
+with the updates.
+The Leaflet instance did not need any modifications for this implementation.
