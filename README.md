@@ -29,20 +29,23 @@ Distances should appear on the sidebar.
 
 ### Server 
 #### Graphhopper
-The application runs on a local Graphhopper server which stores road data of the 
-Mazowieckie Voivodeship (it can be easily changed though, see the documentation of 
-the Graphhopper server). 
+The application runs on a local [Graphhopper](https://github.com/graphhopper/graphhopper)
+server which stores road data of the Mazowieckie Voivodeship 
+(it can be easily changed though, see
+[the documentation of the Graphhopper server](https://github.com/graphhopper/graphhopper/blob/master/docs/core/quickstart-from-source.md)
+). 
 That allows for easy calculations with real road data in mind.
 All computation is done on the server side.
 
 The server has few modifications in order to enable ability to perform calculations
 on matrices and implement algorithms used to calculate solutions.
 The server modifications (algorithms and ways of performing calculations) 
-are contained in the file `/graphhopper/VRPResource.java`, which is meant to be in
+are contained in the file `../graphhopper/VRPResource.java`, which is meant to be in
 `web-bundle/src/main/java/com/graphhopper/resources`
-**of the Graphhopper source** and enabled in the file
-`web-bundle/src/main/java/com/graphhopper/http/GraphHopperBundle.java`.
-also **in the Graphhopper source**.
+**of** [**the Graphhopper source**](https://github.com/graphhopper/graphhopper)
+and enabled in the file
+`web-bundle/src/main/java/com/graphhopper/http/GraphHopperBundle.java`,
+also **in** [**the Graphhopper source**](https://github.com/graphhopper/graphhopper).
 
 #### Algorithms
 There are a few algorithms for the user to choose from to find the most suitable solution,
@@ -57,15 +60,16 @@ It consists of a simple sidebar with controls used to input data for the calcula
 and a Leaflet map widget which covers the most of the web app area.
 That part is used to help in providing input data and showing the output.
 
-All web app JavaScript code is containted in the file `/js/main.js` and the main HTML file
-is in `/index.html`. Web app CSS data is in the file `/css/styles.css`,
+All web app JavaScript code is containted in the file `../js/main.js` and the main HTML file
+is in `../index.html`. Web app CSS data is in the file `../css/styles.css`,
 
 #### Leaflet
-A local Leaflet instance is used to show interactive map, destination and starting points,
-and the results as a colored lines to distinguish paths for different vehicles.
+A local [Leaflet](https://leafletjs.com) instance is used to show interactive map, 
+destination and starting points, and the results as a colored lines to distinguish 
+paths for different vehicles.
 The local approach allows for easy modifications, resistance to changes that could break
 the functionality, better performance, since nothing needs to be downloaded from 
 the remote servers, but on the other hand, needs constant updating in order to keep up
 with the updates.
 The Leaflet instance did not need any modifications for this implementation.
-_OpenStreetMaps_ is used as a map layer provider.
+[OpenStreetMap](https://www.openstreetmap.org) is used as a map layer provider.
