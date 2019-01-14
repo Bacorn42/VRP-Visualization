@@ -29,10 +29,10 @@ Distances should appear on the sidebar.
 
 ### Server 
 #### Graphhopper
-The application runs on a local Graphhopper server which stores a map of the 
+The application runs on a local Graphhopper server which stores road data of the 
 Mazowieckie Voivodeship (it can be easily changed though, see the documentation of 
 the Graphhopper server). 
-That allows for easy calculations using route data provided with Graphhopper.
+That allows for easy calculations with real road data in mind.
 All computation is done on the server side.
 
 The server has few modifications in order to enable ability to perform calculations
@@ -61,10 +61,11 @@ All web app JavaScript code is containted in the file `/js/main.js` and the main
 is in `/index.html`. Web app CSS data is in the file `/css/styles.css`,
 
 #### Leaflet
-A local Leaflet instance is used, which enables the app to be used offline,
-since no component is downloaded.
-This approach allows for easy modifications, resistance to changes that could break
+A local Leaflet instance is used to show interactive map, destination and starting points,
+and the results as a colored lines to distinguish paths for different vehicles.
+The local approach allows for easy modifications, resistance to changes that could break
 the functionality, better performance, since nothing needs to be downloaded from 
 the remote servers, but on the other hand, needs constant updating in order to keep up
 with the updates.
 The Leaflet instance did not need any modifications for this implementation.
+_OpenStreetMaps_ is used as a map layer provider.
