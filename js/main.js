@@ -58,10 +58,20 @@ document.getElementById('randBut').addEventListener('click', function() {
   }
 });
 
+// Calls the greedy algorithm.
+document.getElementById('greedyBut').addEventListener('click', function() {
+  requestRoutes('g');
+});
+
+// Calls the simulated annealing algorithm.
+document.getElementById('saBut').addEventListener('click', function() {
+  requestRoutes(document.getElementById('speed').selectedIndex);
+});
+
 // Clears the previous markers and routes.
 // Calls the custom VRP API with all the points and numbr of cars.
 // The calculations are all done on the server.
-document.getElementById('searchButtonX').addEventListener('click', function() {
+function requestRoutes(type) {
   var inputs = document.getElementById('text').value.trim().split('\n');
   var cars = parseInt(document.getElementById('cars').value);
   
@@ -69,16 +79,17 @@ document.getElementById('searchButtonX').addEventListener('click', function() {
   routesLayer.clearLayers();
   
   drawMarkers(inputs);
-  
+
   var requestUrl = url + "/vrp/?";
   for(let i = 0; i < inputs.length; i++)
     requestUrl += "p=" + inputs[i] + "&";
-  requestUrl += "c=" + cars;
+  requestUrl += "c=" + cars + "&";
+  requestUrl += "t=" + type;
   
   fetch(requestUrl)
   .then(response => response.json())
   .then(pathsObj => getRoutes(pathsObj, cars));
-});
+}
 
 // Draws a marker on each location a vehicle has to go through.
 function drawMarkers(inputs) {
@@ -93,6 +104,9 @@ function drawMarkers(inputs) {
 // Extracts arrays of coordinates from the JSON object and draws the routes.
 function getRoutes(pathsObj, cars) {
   var routes = [];
+  $('#dist').countTo({from: 0, to: pathsObj.distance/1000, refreshInterval: 50, speed: 3000, decimals: 3});
+  $('#carsUtil').countTo({from: 0, to: pathsObj.carsUtilized, refreshInterval: 50, speed: 3000});
+  $('#maxDist').countTo({from: 0, to: pathsObj.maxDistance/1000, refreshInterval: 50, speed: 3000, decimals: 3});
   for(let i = 0; i < cars; i++)
     routes.push(pathsObj.paths[i].points.coordinates);
   drawRoutes(routes);
@@ -121,3 +135,20 @@ function drawRoutes(routes) {
     polyline.addTo(routesLayer);
   }
 }
+
+(function () {
+	'use strict';
+	// Animations
+	var counter = function() {
+		$('.js-counter').countTo({
+			 formatter: function (value, options) {
+	      return value.toFixed(options.decimals);
+	    },
+		});
+	};
+
+	// Document on load.
+	$(function(){
+		counter();
+	});
+}());

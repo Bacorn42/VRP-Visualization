@@ -1,36 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html class="no-js">
 	<head>
-		<title>VRP Visualization</title>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<link rel="stylesheet" href="css/leaflet.css?v=1.3.1" />
-		<link rel="stylesheet" href="css/styles.css" />
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>VRP Interface</title>
+	<link href="https://fonts.googleapis.com/css?family=Karla:400,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700" rel="stylesheet">
+	<link rel="stylesheet" href="css/leaflet.css?v=1.3.1" />
 		<style>
 			#map {
 				height: 800px;
 				width: 100%;
 			}
 		</style>
+
+	<link rel="stylesheet" href="css/bootstrap.css">
+	<link rel="stylesheet" href="css/style.css">
+
 	</head>
-
 	<body>
-		<section>
-			<nav>
-				<h3>VRP Visualization</h3>
-				Points: <input type="text" id="points">
-				<input type="button" id="randBut" value="Randomize!">
-				<textarea id="text"></textarea><br>
-				Cars: <input type="text" id="cars"><br>
-				<input type="button" id="searchButtonX" value="Route!">
-			</nav>
+	<div>
+		<div class="container">
+			<div class="headlines">
+				<h1 class="header">Vehicle Routing Problem</h1>
+				<h2 class="permute">Visualization</h2>
+			</div>
+			<form class="data_inputs" action="">
+				<div style="margin-bottom:10px;">
+					<input class="input_holder" type="number" name="points" value="" placeholder="# of points" id="points" />
+					<textarea class="input_holder" name="pointsX" value="" placeholder="Points" id="text"></textarea>
+					<button class="biggy" type="button" name="randomize" id="randBut">Randomize Points</button>
+				</div>
+				<input class="input_holder" type="number" name="cars" value="" placeholder="# of cars" id="cars" />
+				<br />
+				<button class="biggy centeroid" onClick="document.getElementById('counter-animate').scrollIntoView();" type="button" name="route" id="greedyBut">Use Greedy Algorithm!</button>
+				<br />
+				<div>
+				<button class="biggy centeroid" onClick="document.getElementById('counter-animate').scrollIntoView();" type="button" name="route" id="saBut">Use Simulated Annealing!</button>
+				<select class="input_holder" id="speed">
+					<option value="0">Very Fast</option>
+					<option value="1">Fast</option>
+					<option value="2">Moderate</option>
+					<option value="3">Slow</option>
+					<option value="4">Thourough</option>
+				</select>
+				</div>
+			</form>
+		</div>
+		<div id="map">
+		</div>
+		<div class="fh5co-counters" style="background-color:black;" data-stellar-background-ratio="0.5" id="counter-animate">
+			<div>
+				<div class="row" >
+					<div class="col-md-4 text-center">
+						<span class="fh5co-counter js-counter" data-from="0" data-to="0" data-speed="5000" data-refresh-interval="50" id="dist"></span>
+						<span class="fh5co-counter-label">Total Distance</span>
+					</div>
+					<div class="col-md-4 text-center">
+						<span class="fh5co-counter js-counter" data-from="0" data-to="0" data-speed="5000" data-refresh-interval="50" id="carsUtil"></span>
+						<span class="fh5co-counter-label">Cars Utilized</span>
+					</div>
+					<div class="col-md-4 text-center">
+						<span class="fh5co-counter js-counter" data-from="0" data-to="0" data-speed="5000" data-refresh-interval="50" id="maxDist"></span>
+						<span class="fh5co-counter-label">Maximum Distance</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 
-			<article>
-				<div id="map" class="map"></div>
-			</article>
-		</section>
+	<script src="js/jquery.min.js"></script>
+	<script src="js/jquery.countTo.js"></script>
+	<script src="js/leaflet.js"></script>
+	<script src="js/main.js"></script>
 
-		<script src="js/leaflet.js"></script>
-		<script src="js/main.js"></script>
 	</body>
 </html>
