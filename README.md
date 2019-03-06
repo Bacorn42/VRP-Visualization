@@ -14,6 +14,6 @@ The vehicles' starting point is located roughly in the middle of Warsaw.
 4. Calculated routes should appear on the map after calculations, which take longer depending on given number of points. 
 
 ## Credits
-Kacper Leszczyński
-Youssef Ibrahim
+Kacper Leszczyński  
+Youssef Ibrahim  
 Igor Sałuch
